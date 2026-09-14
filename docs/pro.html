@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Gamer Pro</title>
+<meta name="description" content="Drop in a gameplay recording. Get a script in your channel's voice, a two-voice AI voiceover, a thumbnail, timeline markers and the whole upload pack. Windows. $39/month.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --ground:#EFF2F3;
+  --surface:#FFFFFF;
+  --surface-2:#E4E9EB;
+  --ink:#0D1317;
+  --ink-2:#33414B;
+  --muted:#65737D;
+  --line:#D4DBDE;
+  --line-2:#B6C0C6;
+  --accent:#E01050;
+  --accent-text:#C3113F;
+  --accent-ink:#FFFFFF;
+  --accent-wash:#FFE9EF;
+  --good:#1F6B41;
+  --bad:#A8342A;
+  --shadow:0 1px 1px rgba(13,19,23,.04), 0 10px 30px -12px rgba(13,19,23,.18);
+  --f-display:"Bricolage Grotesque","Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --maxw:1120px;
+  --pad:clamp(18px,4vw,40px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0A0E11; --surface:#141A1F; --surface-2:#1D252B;
+    --ink:#E9EEF1; --ink-2:#B4C0C7; --muted:#84929A;
+    --line:#242E35; --line-2:#36434B;
+    --accent:#FF4D7A; --accent-text:#FF8AA8; --accent-ink:#16060C; --accent-wash:#2A1420;
+    --good:#5BC98C; --bad:#F0796B;
+    --shadow:0 1px 1px rgba(0,0,0,.4), 0 14px 34px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0A0E11; --surface:#141A1F; --surface-2:#1D252B;
+  --ink:#E9EEF1; --ink-2:#B4C0C7; --muted:#84929A;
+  --line:#242E35; --line-2:#36434B;
+  --accent:#FF4D7A; --accent-text:#FF8AA8; --accent-ink:#16060C; --accent-wash:#2A1420;
+  --good:#5BC98C; --bad:#F0796B;
+  --shadow:0 1px 1px rgba(0,0,0,.4), 0 14px 34px -16px rgba(0,0,0,.7);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+img,video,svg{max-width:100%}
+a{color:var(--accent-text);text-decoration:none;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent-text);outline-offset:3px;border-radius:2px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;line-height:1.06;margin:0;
+  text-wrap:balance;letter-spacing:-.018em}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+strong{font-weight:600}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:62ch}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tnum{font-variant-numeric:tabular-nums}
+
+.top{border-bottom:1px solid var(--line);background:var(--surface)}
+.top .wrap{display:flex;align-items:center;gap:clamp(14px,3vw,30px);min-height:62px;
+  flex-wrap:wrap;padding-block:10px}
+.mark{display:flex;align-items:center;gap:9px;color:var(--ink);font-family:var(--f-display);
+  font-weight:800;font-size:.95rem;letter-spacing:-.01em;margin-right:auto}
+.mark:hover{text-decoration:none}
+.mark svg{display:block;color:var(--accent)}
+.top nav{display:flex;gap:clamp(12px,2.4vw,24px);flex-wrap:wrap;align-items:center}
+.top nav a{color:var(--ink-2);font-size:.92rem;font-weight:500}
+.top nav a[aria-current="page"]{color:var(--ink);box-shadow:inset 0 -2px var(--accent)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--f-body);font-weight:600;font-size:.95rem;line-height:1;
+  padding:13px 20px;border-radius:3px;border:1px solid var(--accent);cursor:pointer;
+  background:var(--accent);color:var(--accent-ink);text-align:center}
+.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn.ghost:hover{background:var(--surface-2);filter:none}
+.btn small{font-weight:400;opacity:.75;font-size:.85em}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+
+section{padding-block:clamp(48px,7vw,88px)}
+.band{background:var(--surface);border-block:1px solid var(--line)}
+.hd{display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(26px,4vw,44px)}
+.hd h2{font-size:clamp(1.6rem,3.6vw,2.4rem)}
+
+.hero{padding-block:clamp(46px,7vw,84px) clamp(36px,5vw,56px)}
+.hero h1{font-size:clamp(2.3rem,6vw,3.9rem);letter-spacing:-.034em;max-width:15ch}
+.hero .lede{margin-top:20px;font-size:clamp(1.05rem,2vw,1.26rem)}
+.hero .btns{margin-top:28px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.facts li{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.04em;
+  border:1px solid var(--line-2);border-radius:2px;padding:6px 10px;color:var(--ink-2);
+  background:var(--surface)}
+
+/* screenshot plate */
+.plate{position:relative;aspect-ratio:16/10;background:var(--surface-2);overflow:hidden}
+.plate img,.plate video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  display:block;background:var(--surface-2)}
+.plate video{object-fit:contain;background:#07090B}
+.plate .ph{display:none}
+.plate.missing .ph{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px;
+  background-color:var(--surface-2);
+  background-image:repeating-linear-gradient(135deg,transparent 0 9px,var(--line) 9px 10px)}
+.plate.missing .ph b{font-family:var(--f-mono);font-size:.74rem;font-weight:500;letter-spacing:.06em;
+  color:var(--ink-2);background:var(--surface);border:1px solid var(--line-2);padding:5px 9px;border-radius:2px}
+.plate.missing .ph i{font-style:normal;font-size:.78rem;color:var(--muted);max-width:36ch}
+figure.shot{margin:0;display:flex;flex-direction:column}
+figure.shot .plate{border:1px solid var(--line);border-radius:3px 3px 0 0}
+figure.shot figcaption{font-family:var(--f-mono);font-size:.73rem;letter-spacing:.03em;color:var(--muted);
+  border:1px solid var(--line);border-top:0;border-radius:0 0 3px 3px;padding:9px 12px;background:var(--surface)}
+figure.shot figcaption b{color:var(--ink-2);font-weight:500}
+.demo .plate{aspect-ratio:16/9}
+
+/* the pipeline: a real sequence, so it is numbered */
+.steps{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:1fr;gap:8px;padding:26px 0;border-bottom:1px solid var(--line)}
+@media (min-width:820px){
+  .step{grid-template-columns:74px 1fr 1.15fr;gap:clamp(18px,3vw,38px);align-items:start}
+}
+.step .n{font-family:var(--f-mono);font-size:.78rem;font-weight:600;letter-spacing:.1em;
+  color:var(--accent-text);padding-top:4px}
+.step h3{font-size:1.22rem;letter-spacing:-.02em}
+.step .out{display:flex;flex-direction:column;gap:9px}
+.step p{color:var(--ink-2);font-size:.97rem;max-width:58ch}
+.step .files{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.step .files code{font-family:var(--f-mono);font-size:.73rem;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:2px;padding:3px 7px;color:var(--ink-2)}
+
+/* feature rows */
+.cols{display:grid;gap:clamp(22px,3.4vw,44px);grid-template-columns:1fr}
+@media (min-width:880px){.cols{grid-template-columns:1fr 1fr}}
+@media (min-width:880px){.cols.wide-left{grid-template-columns:1.12fr .88fr}}
+.stack{display:flex;flex-direction:column;gap:16px}
+.stack p{color:var(--ink-2);font-size:1rem;max-width:60ch}
+.stack h3{font-size:clamp(1.3rem,2.6vw,1.7rem)}
+
+/* the evidence block, shown as the app builds it */
+.prompt{
+  border:1px solid var(--line);border-radius:3px;background:var(--surface);overflow:hidden;
+}
+.prompt .bar{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);background:var(--surface-2);border-bottom:1px solid var(--line);padding:9px 14px}
+.prompt .body{padding:14px;overflow-x:auto}
+.prompt table{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:.78rem;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.prompt td{padding:4px 10px 4px 0;border:0;color:var(--ink-2)}
+.prompt td.r{text-align:right;font-weight:600;width:1%;padding-right:14px}
+.prompt tr.win td.r{color:var(--accent-text)}
+.prompt tr.lose td.r{color:var(--muted)}
+.prompt .sep td{padding-top:12px;color:var(--muted);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+
+/* checklist */
+.checks{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));overflow:hidden}
+.check{background:var(--surface);padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.check b{font-size:.98rem}
+.check span{font-size:.88rem;color:var(--muted)}
+
+/* pricing */
+.plans{display:grid;gap:18px;grid-template-columns:1fr}
+@media (min-width:760px){.plans{grid-template-columns:1fr 1fr}}
+.plan{border:1px solid var(--line);border-radius:4px;background:var(--surface);
+  padding:clamp(22px,3vw,30px);display:flex;flex-direction:column;gap:16px}
+.plan.best{border-color:var(--accent);border-width:1px;box-shadow:inset 0 0 0 1px var(--accent)}
+.plan .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.plan h3{font-size:1.2rem}
+.badge{font-family:var(--f-mono);font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent-ink);background:var(--accent);padding:4px 8px;border-radius:2px;font-weight:600}
+.plan .amt{display:flex;align-items:baseline;gap:8px}
+.plan .amt b{font-family:var(--f-display);font-weight:800;font-size:2.6rem;letter-spacing:-.035em;
+  font-variant-numeric:tabular-nums;line-height:1}
+.plan .amt span{color:var(--muted);font-size:.92rem}
+.plan ul{display:flex;flex-direction:column;gap:9px}
+.plan ul li{position:relative;padding-left:19px;font-size:.95rem;color:var(--ink-2)}
+.plan ul li::before{content:"";position:absolute;left:0;top:.62em;width:9px;height:2px;background:var(--accent)}
+.plan .btn{width:100%}
+.plan .fine{font-size:.82rem;color:var(--muted)}
+.founder-line{margin-top:20px;border:1px dashed var(--line-2);border-radius:3px;background:var(--surface);
+  padding:18px 20px;display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;justify-content:space-between}
+.code{font-family:var(--f-mono);font-weight:600;font-size:1.05rem;letter-spacing:.08em;
+  border:1px solid var(--accent);color:var(--accent-text);border-radius:3px;padding:7px 12px;
+  background:var(--accent-wash)}
+
+.scroller{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface)}
+table.grid{border-collapse:collapse;width:100%;min-width:560px;font-size:.94rem}
+table.grid th,table.grid td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+table.grid thead th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;background:var(--surface-2)}
+table.grid tbody tr:last-child td{border-bottom:0}
+table.grid td.k{font-weight:600;white-space:nowrap;color:var(--ink)}
+table.grid td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.faq{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:600;font-size:1rem;
+  display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--muted);font-weight:400}
+.faq details[open] summary::after{content:"\2212"}
+.faq p{padding:0 0 18px;color:var(--ink-2);max-width:66ch;font-size:.97rem}
+
+footer{border-top:1px solid var(--line);background:var(--surface);padding-block:34px;font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;align-items:flex-start}
+footer nav{display:flex;flex-wrap:wrap;gap:16px}
+footer a{color:var(--ink-2)}
+footer p{color:var(--muted);max-width:42ch}
+
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="index.html">
+      <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true" fill="currentColor">
+        <rect x="0" y="12" width="3" height="6"/><rect x="4.7" y="10" width="3" height="8"/>
+        <rect x="9.4" y="0" width="3" height="18"/><rect x="14.1" y="11" width="3" height="7"/>
+        <rect x="18.8" y="13" width="3" height="5"/>
+      </svg>
+      AI Gamer Pro
+    </a>
+    <nav>
+      <a href="pro.html" aria-current="page">Product</a>
+      <a href="docs-pro.html">Manual</a>
+      <a href="case-study.html">Case study</a>
+      <a href="doc.html">Doc AI</a>
+      <a href="index.html">Both apps</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">AI Gamer Pro &middot; $39 a month</p>
+    <h1>Drop in the recording. Pick up the upload.</h1>
+    <p class="lede">A Windows app for faceless gaming channels. It splits your gameplay,
+      writes the script in your channel's voice with your own characters, records a
+      two-voice AI voiceover, draws the thumbnail, and writes the title, description,
+      chapters and tags &mdash; after reading how your own past titles actually did.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/beskicz-ux/ai-gamer-pro/releases/latest/download/AI-Gamer-Pro-Setup-4.14.exe">Start the 14-day trial</a>
+      <a class="btn ghost" href="#pricing">See pricing</a>
+    </div>
+    <ul class="facts">
+      <li>No card for the trial</li>
+      <li>Your own Gemini + ElevenLabs keys</li>
+      <li>Windows 10 &amp; 11</li>
+      <li>Nothing leaves your machine</li>
+    </ul>
+  </div>
+</section>
+
+<section class="band demo" style="padding-block:clamp(32px,4.5vw,52px)">
+  <div class="wrap">
+    <figure class="shot">
+      <div class="plate">
+        <video src="demo-pro.mp4" controls preload="none" poster="img/pro-home.png"
+               onerror="this.closest('.plate').classList.add('missing');this.remove()"></video>
+        <div class="ph"><b>demo-pro.mp4</b><i>Four minutes: a folder of gameplay to a finished voiceover, thumbnail and title pack</i></div>
+      </div>
+      <figcaption><b>DEMO</b> &nbsp;One video, start to finish, in real time</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">The pipeline</p>
+      <h2>Five steps, in order, down the left of the window.</h2>
+      <p class="lede">Each one hands off to the next. Nothing you have paid for is ever
+        thrown away: stop halfway and the finished file stays as it was, with the fragment
+        written beside it.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="n">STEP 1</span>
+        <div>
+          <h3>Footage in</h3>
+          <p>Point it at a folder. It reads the folder's name to work out which channel this
+            is &mdash; and warns you when that does not match the channel you picked, which is
+            the one mistake that is expensive and invisible.</p>
+        </div>
+        <div class="out">
+          <p>Drop the whole twenty-minute recording in; it cuts it into parts itself. Say
+            where to cut out loud while you are recording and it listens to the recording
+            and works out what you meant, so there are no timecodes to type. Say "this video
+            ends here" mid-session and you get two separate projects, each with a note
+            saying which stretch of the recording it came from.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 2</span>
+        <div>
+          <h3>Script, then a second pass over it</h3>
+          <p>Gemini watches every part of the recording, hears what you said while you played,
+            and writes the dialogue in your characters' voices.</p>
+        </div>
+        <div class="out">
+          <p>Then the whole script goes back with your channel's guide and one question:
+            where does this break the rules. What it finds is listed above the script &mdash;
+            the rule, and enough of the line to find it &mdash; and the clear-cut ones are
+            fixed before you ever read it. The line above tells you how long the script runs
+            against how long the footage is, in red when the script is longer.</p>
+          <p><strong>It learns how fast your channel reads.</strong> After the first
+            voiceover it measures the real pace and writes every script after that to
+            it &mdash; which is what stops the drift out of sync.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 3</span>
+        <div>
+          <h3>Voiceover, and where every line lands</h3>
+          <p>Each channel's voices are set once, so your characters sound the same in every
+            video. It shows the cost, asks once, then records.</p>
+        </div>
+        <div class="out">
+          <p>Three files appear beside the voiceover. The one that matters is
+            <code class="mono">markers.srt</code>: import it into CapCut as local captions and
+            every line of the script is already on the timeline at the exact second it is
+            spoken. You drag gameplay onto marks that are there instead of nudging clips
+            until it looks right.</p>
+          <p>The times are not estimates &mdash; they come back from ElevenLabs with the audio.
+            If it cannot get real ones it writes no marker files at all, because a mark you
+            cannot trust is worse than no mark.</p>
+          <div class="files"><code>voiceover.wav</code><code>markers.srt</code><code>markers.csv</code><code>timings.json</code></div>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 4</span>
+        <div>
+          <h3>Thumbnail, one picture at a time</h3>
+          <p>It reads the script and picks <em>one moment</em>, judged against seven tests:
+            is it a turn rather than an opening, is it the instant before the impact, does it
+            make sense to someone who has not seen the video, does it leave the outcome hidden.</p>
+        </div>
+        <div class="out">
+          <p>Then it draws one picture and shows it to you. Keep it, redraw it with an
+            instruction in plain English &mdash; "the scared one should look terrified, not confused" &mdash;
+            or reject the moment and make it choose another. One image per press, so steering
+            it costs about what one old batch of three did.</p>
+          <p><strong>A reference picture is optional.</strong> Point at a composition that
+            works and pick how closely to follow it. It takes the framing, the camera distance
+            and where the light falls &mdash; and never what is in it: every person is replaced
+            by your characters and every word, logo and watermark is dropped.</p>
+          <p>After it draws, it checks the picture for writing &mdash; a word, a number, the
+            little duration badge image models like to paint into the corner &mdash; and says
+            so in red when it finds any.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 5</span>
+        <div>
+          <h3>The upload pack</h3>
+          <p>Five titles, a description with chapters and your boilerplate, and a tag list
+            inside YouTube's 500-character budget.</p>
+        </div>
+        <div class="out">
+          <p>Chapters are arithmetic over the marker timings, not a guess &mdash; and they
+            obey YouTube's rules exactly, because breaking any one of them means the video
+            gets <em>no</em> chapters at all, silently, with nothing in Studio to say why.
+            If Gemini is unreachable you still get the chapters and the description; only the
+            titles need a model.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">The part nobody else does</p>
+      <h2>The title writer reads your own scoreboard first.</h2>
+      <p class="lede">Most tools write a title from the script. This one writes it from the
+        script <em>and</em> from which of your last fifty titles beat your channel's normal
+        video &mdash; measured against your own median, because comparing a channel to itself
+        is the only fair comparison there is.</p>
+    </div>
+    <div class="cols wide-left">
+      <div class="prompt">
+        <p class="bar">What goes into the title prompt</p>
+        <div class="body">
+          <table>
+            <tbody>
+              <tr class="sep"><td class="r"></td><td>Beat the channel's normal</td></tr>
+              <tr class="win"><td class="r">72.3&times;</td><td>DON'T Enter the NIGHT Bus 666 !</td></tr>
+              <tr class="win"><td class="r">31.4&times;</td><td>JJ and Mikey Have to UPGRADE Roller Skates&hellip;</td></tr>
+              <tr class="win"><td class="r">16.1&times;</td><td>JJ and Mikey Have to Drive up a DANGEROUS Hill</td></tr>
+              <tr class="win"><td class="r">14.7&times;</td><td>DON'T Sink on TITANIC Ship!</td></tr>
+              <tr class="win"><td class="r">6.9&times;</td><td>Escape SCARY TEACHER at 3AM&hellip;</td></tr>
+              <tr class="sep"><td class="r"></td><td>Did worse than normal</td></tr>
+              <tr class="lose"><td class="r">0.3&times;</td><td>Mikey and JJ are CHAINED TOGETHER in Roblox&hellip;</td></tr>
+              <tr class="lose"><td class="r">0.2&times;</td><td>We Can't Survive This &mdash; JJ &amp; Mikey vs the 67 Worm!</td></tr>
+              <tr class="lose"><td class="r">0.1&times;</td><td>JJ and Mikey Discover BURRIED BRAINROT in Minecraft ?!</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="stack">
+        <p>Those are real rows from one of the founder's own channels, scanned by the app on
+          13 September 2026. Eight winners and four losers go in, under a heading that tells
+          the model to learn the <em>pattern</em> &mdash; length, whether the characters are
+          named, how specific the promise gets &mdash; and never to reuse the wording or the
+          topic.</p>
+        <p>Three things are held back on purpose. Shorts, whose titles work nothing like a
+          long video's. Videos less than 72 hours old, which have not failed &mdash; they have
+          not finished happening. And the whole block when there are fewer than twelve
+          measured videos, because a handful of titles offered as evidence makes a model stop
+          writing and start copying.</p>
+        <p><a href="case-study.html">The case study</a> works through what that spread is
+          worth on 96 real videos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cols wide-left" style="align-items:start">
+      <figure class="shot">
+        <div class="plate">
+          <img src="img/pro-radar.png" alt="The Radar page: a grid of idea cards, each with a thumbnail and the ratio by which it beat its own channel"
+               onerror="this.closest('.plate').classList.add('missing');this.remove()">
+          <div class="ph"><b>img/pro-radar.png</b><i>Radar &mdash; ideas sorted by how far past their own channel they went</i></div>
+        </div>
+        <figcaption><b>FIG. 3</b> &nbsp;Radar, three ideas across</figcaption>
+      </figure>
+      <div class="stack">
+        <p class="eyebrow">Radar</p>
+        <h3>The videos that beat the channel that posted them.</h3>
+        <p>Radar asks YouTube what has been watched in your niche lately and sorts what comes
+          back by <strong>outlier ratio</strong>, not view count. A million views on a channel
+          that always gets a million tells you nothing about the subject; two hundred thousand
+          on a channel that normally gets eight thousand tells you the topic pulled.</p>
+        <p>Each card shows the thumbnail, because that is what a person actually judges an
+          idea by, and the number that made it a card. <strong>Make this one</strong> turns an
+          idea into a brief against a video code, and the picture the idea came from is
+          already sitting there as the thumbnail reference when you open that project.</p>
+        <p>Scans run on your free YouTube Data quota. The page says what a scan will cost
+          before it spends anything, and caches for six hours so scanning the same channel
+          twice in an afternoon is free.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="cols" style="align-items:start">
+      <div class="stack">
+        <p class="eyebrow">Memory</p>
+        <h3>Your characters stop telling the same joke.</h3>
+        <p>A model with no memory writes the same haunted orphanage in January and in June.
+          Given a hundred videos it will also stack every running joke into one line &mdash;
+          pizza, tactical gear, the turtle costume, all in the same sentence, every episode.</p>
+        <p>So the app keeps two kinds of memory per channel, with opposite rules.
+          <strong>Stories are remembered and banned:</strong> a backstory that has been told is
+          finished. <strong>Running jokes are remembered and rotated:</strong> they are supposed
+          to come back, just not all of them at once.</p>
+        <p>It lives with your data, one file per channel, so it travels with you between
+          versions and machines. Delete it if you want the channel to forget.</p>
+      </div>
+      <div class="stack">
+        <p class="eyebrow">Your own numbers</p>
+        <h3>The scoreboard the app has been missing.</h3>
+        <p>Every morning it walks your whole uploads playlist &mdash; not a recent window, because
+          the back catalogue is where the money is. Between the app's own scans on 11 and 13
+          September 2026, one video published on 11 March picked up
+          <span class="mono">4,847</span> views in two days: more than every video that
+          channel had published in the previous fortnight put together.</p>
+        <p>One scan is a scoreboard. Thirty kept snapshots are a trend, and the trend is what
+          tells you a five-month-old video has started moving again &mdash; which is the
+          cheapest hit available, because you already know what the audience rediscovered.</p>
+        <p>It is nearly free: a channel of a hundred videos costs about six units of the ten
+          thousand YouTube gives you every day.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Also in the box</p>
+      <h2>The small things that stop a bad night.</h2>
+    </div>
+    <div class="checks">
+      <div class="check"><b>Stop is not an error</b><span>Your finished voiceover is left exactly as it was; the fragment is written beside it as a separate file. Nothing you have been billed for is lost.</span></div>
+      <div class="check"><b>One job at a time</b><span>Starting a second job, or clicking away mid-job, is refused with a note saying what is running &mdash; instead of quietly killing what ElevenLabs has already charged you for.</span></div>
+      <div class="check"><b>Keys tested up front</b><span>One button says whether each key actually works. A dead key otherwise shows up in the middle of the one action that spends money.</span></div>
+      <div class="check"><b>Priced before it spends</b><span>Every step that costs money quotes the cost and asks once.</span></div>
+      <div class="check"><b>Signed silent updates</b><span>Checked in the background, applied when you close the app, never while a job is running. Every update is signed and checksummed; an update that fails either check is refused and the app carries on.</span></div>
+      <div class="check"><b>Your settings survive</b><span>Keys, voices, references, measured pace and your project list live in one folder. A new version picks them up; you never paste a key twice.</span></div>
+      <div class="check"><b>Two languages at once</b><span>Channels published in a second language get both scripts from one press, each with its own voices, and the translation is remade if you edit the original.</span></div>
+      <div class="check"><b>Light and dark, four accents</b><span>It is a desktop app people sit in front of for hours. It respects the Windows "show animations" switch too.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="cols" style="align-items:start">
+      <figure class="shot">
+        <div class="plate">
+          <img src="img/pro-thumbnail.png" alt="The thumbnail step: one drawn picture at the top, with keep, redraw and pick-another-moment underneath"
+               onerror="this.closest('.plate').classList.add('missing');this.remove()">
+          <div class="ph"><b>img/pro-thumbnail.png</b><i>Thumbnail &mdash; one picture, three things you can do to it</i></div>
+        </div>
+        <figcaption><b>FIG. 4</b> &nbsp;Thumbnail, with a reference picture set</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="plate">
+          <img src="img/pro-publish.png" alt="The publish step: five candidate titles, a description with chapters, and the tag list"
+               onerror="this.closest('.plate').classList.add('missing');this.remove()">
+          <div class="ph"><b>img/pro-publish.png</b><i>Publish &mdash; five titles, chapters, description, tags</i></div>
+        </div>
+        <figcaption><b>FIG. 5</b> &nbsp;The upload pack, ready to paste</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Pricing</p>
+      <h2>One price. Your own API keys underneath it.</h2>
+      <p class="lede">No credits to buy from us, no per-video fee, no margin on your audio.
+        You pay Google and ElevenLabs directly at their prices, which for a gaming video is
+        well under a dollar.</p>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <div class="row"><h3>Monthly</h3><span class="badge">Founding 20</span></div>
+        <div class="amt"><b>$39</b><span>per month</span></div>
+        <ul>
+          <li>Everything on this page, no tiers</li>
+          <li>Unlimited videos and channels</li>
+          <li>Silent signed updates</li>
+          <li>Cancel any month</li>
+        </ul>
+        <a class="btn" href="https://github.com/beskicz-ux/ai-gamer-pro/releases/latest/download/AI-Gamer-Pro-Setup-4.14.exe">Subscribe monthly</a>
+        <p class="fine">Use <strong>FOUNDER50</strong> for 50% off the first month &mdash;
+          first 20 customers.</p>
+      </div>
+      <div class="plan best">
+        <div class="row"><h3>Yearly</h3><span class="badge">Save $178</span></div>
+        <div class="amt"><b>$290</b><span>per year &mdash; $24.17 a month</span></div>
+        <ul>
+          <li>The same thing, paid once</li>
+          <li>Works out at seven and a half months</li>
+          <li>Unlimited videos and channels</li>
+          <li>Silent signed updates</li>
+        </ul>
+        <a class="btn" href="https://github.com/beskicz-ux/ai-gamer-pro/releases/latest/download/AI-Gamer-Pro-Setup-4.14.exe">Subscribe yearly</a>
+        <p class="fine">Against $468 if you paid monthly for twelve months.</p>
+      </div>
+    </div>
+
+    <div class="founder-line">
+      <div style="flex:1 1 300px">
+        <p class="eyebrow">Founding 20</p>
+        <p style="margin-top:6px;color:var(--ink-2);font-size:.96rem">50% off your first month,
+          for the first twenty customers. Same app, same trial, same support &mdash; it is for
+          the people who buy before there are reviews to read.</p>
+      </div>
+      <span class="code">FOUNDER50</span>
+    </div>
+
+    <p style="margin-top:26px">
+      <a class="btn ghost" href="https://github.com/beskicz-ux/ai-gamer-pro/releases/latest/download/AI-Gamer-Pro-Setup-4.14.exe">Or take the 14-day trial first &mdash; no card</a>
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">What it costs to run</p>
+      <h2>The API bill is yours, at cost.</h2>
+    </div>
+    <div class="scroller">
+      <table class="grid">
+        <thead><tr><th scope="col">Key</th><th scope="col">Free?</th><th scope="col">What it does</th><th scope="col">Where</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Gemini</td><td class="n">paid, pennies</td><td>Watches the footage, writes the script, checks it, draws the thumbnail, writes the titles</td><td class="n">aistudio.google.com</td></tr>
+          <tr><td class="k">ElevenLabs</td><td class="n">paid</td><td>The character voices, and the line timings the markers are built from</td><td class="n">elevenlabs.io</td></tr>
+          <tr><td class="k">YouTube Data</td><td class="n">free</td><td>Radar, and the daily scan of your own channels</td><td class="n">console.cloud.google.com</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;font-size:.9rem;color:var(--muted)">Keys are saved on your
+      machine only and tested on demand. Nothing you make passes through a server of ours.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Questions</p>
+      <h2>Asked before buying.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Does it upload for me?</summary>
+        <p>No, and that is deliberate. It hands you the video, the thumbnail, five titles, the
+          description with chapters and the tags. You paste and press publish yourself, which
+          keeps the one irreversible action in a human's hands.</p>
+      </details>
+      <details>
+        <summary>Do I have to use your characters?</summary>
+        <p>No. You supply one reference picture per character &mdash; that character alone, big
+          and clear, on a plain background &mdash; and the file that describes how they behave.
+          Eight to twelve of your own best thumbnails in a style folder teaches it your look.
+          More pictures per character makes the likeness worse, not better, so one each is the
+          whole point.</p>
+      </details>
+      <details>
+        <summary>How long does one video take?</summary>
+        <p>Mostly waiting on Gemini and ElevenLabs rather than on the app. Writing the script
+          is the long part because the model watches the whole recording; the voiceover is
+          roughly real time. You are in front of it for the two steps that need judgement
+          &mdash; reading the script and choosing the thumbnail.</p>
+      </details>
+      <details>
+        <summary>What happens if I stop mid-voiceover, or run out of credits?</summary>
+        <p>Your existing finished voiceover is untouched and everything recorded so far is
+          written beside it as a separate partial file, with the message saying how many
+          blocks it holds. The script is already saved. Top up and press record again.</p>
+      </details>
+      <details>
+        <summary>Can I edit in something other than CapCut?</summary>
+        <p>Yes. The markers ship as SRT, CSV and JSON. Any editor that imports subtitles will
+          put the script on your timeline at the right seconds; the CSV is for a spreadsheet
+          and the JSON is down to the word.</p>
+      </details>
+      <details>
+        <summary>Is there a refund?</summary>
+        <p>The fourteen-day trial is the refund &mdash; it is the whole app, with no card taken,
+          so you find out before you pay. If something breaks after you have subscribed, email
+          <a href="mailto:beskicz@gmail.com">beskicz@gmail.com</a> and it gets sorted.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a class="mark" href="index.html" style="margin:0">
+        <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true" fill="currentColor">
+          <rect x="0" y="12" width="3" height="6"/><rect x="4.7" y="10" width="3" height="8"/>
+          <rect x="9.4" y="0" width="3" height="18"/><rect x="14.1" y="11" width="3" height="7"/>
+          <rect x="18.8" y="13" width="3" height="5"/>
+        </svg>
+        AI Gamer Pro
+      </a>
+      <p>A Windows app for faceless gaming channels. Built and supported by one person in Czechia.</p>
+      <p><a href="mailto:beskicz@gmail.com">beskicz@gmail.com</a></p>
+    </div>
+    <nav>
+      <a href="index.html">Both apps</a>
+      <a href="doc.html">Doc AI</a>
+      <a href="docs-pro.html">Manual</a>
+      <a href="case-study.html">Case study</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
