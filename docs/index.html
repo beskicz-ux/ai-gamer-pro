@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Gamer Pro &amp; Doc AI</title>
+<meta name="description" content="Two Windows apps that make YouTube videos end to end — one for faceless gaming channels, one for documentary channels. Bring your own API keys. 14-day free trial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* ---------- tokens: light is the bare :root ---------- */
+:root{
+  color-scheme: light;
+  --ground:#EFF2F3;
+  --surface:#FFFFFF;
+  --surface-2:#E4E9EB;
+  --ink:#0D1317;
+  --ink-2:#33414B;
+  --muted:#65737D;
+  --line:#D4DBDE;
+  --line-2:#B6C0C6;
+  --accent:#0D1317;
+  --accent-text:#0D1317;
+  --accent-ink:#FFFFFF;
+  --accent-wash:#E4E9EB;
+  --good:#1F6B41;
+  --bad:#A8342A;
+  --shadow:0 1px 1px rgba(13,19,23,.04), 0 10px 30px -12px rgba(13,19,23,.18);
+  --pro:#E01050;
+  --pro-text:#C3113F;
+  --pro-wash:#FFE9EF;
+  --doc:#A3661F;
+  --doc-text:#8A5615;
+  --doc-wash:#F7ECDD;
+
+  --f-display:"Bricolage Grotesque","Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+
+  --maxw:1120px;
+  --pad:clamp(18px,4vw,40px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0A0E11;
+    --surface:#141A1F;
+    --surface-2:#1D252B;
+    --ink:#E9EEF1;
+    --ink-2:#B4C0C7;
+    --muted:#84929A;
+    --line:#242E35;
+    --line-2:#36434B;
+    --accent:#E9EEF1;
+    --accent-text:#E9EEF1;
+    --accent-ink:#0A0E11;
+    --accent-wash:#1D252B;
+    --good:#5BC98C;
+    --bad:#F0796B;
+    --shadow:0 1px 1px rgba(0,0,0,.4), 0 14px 34px -16px rgba(0,0,0,.7);
+    --pro:#FF4D7A;
+    --pro-text:#FF8AA8;
+    --pro-wash:#2A1420;
+    --doc:#D9973F;
+    --doc-text:#E7B370;
+    --doc-wash:#281C0F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0A0E11;
+  --surface:#141A1F;
+  --surface-2:#1D252B;
+  --ink:#E9EEF1;
+  --ink-2:#B4C0C7;
+  --muted:#84929A;
+  --line:#242E35;
+  --line-2:#36434B;
+  --accent:#E9EEF1;
+  --accent-text:#E9EEF1;
+  --accent-ink:#0A0E11;
+  --accent-wash:#1D252B;
+  --good:#5BC98C;
+  --bad:#F0796B;
+  --shadow:0 1px 1px rgba(0,0,0,.4), 0 14px 34px -16px rgba(0,0,0,.7);
+  --pro:#FF4D7A;
+  --pro-text:#FF8AA8;
+  --pro-wash:#2A1420;
+  --doc:#D9973F;
+  --doc-text:#E7B370;
+  --doc-wash:#281C0F;
+}
+
+/* ---------- base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+img,video,svg{max-width:100%}
+a{color:var(--accent-text);text-decoration:none;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent-text);outline-offset:3px;border-radius:2px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;line-height:1.06;margin:0;text-wrap:balance;letter-spacing:-.018em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+strong{font-weight:600}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{
+  font-family:var(--f-mono);font-size:.7rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:60ch}
+.tnum{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* ---------- header ---------- */
+.top{border-bottom:1px solid var(--line);background:var(--surface)}
+.top .wrap{display:flex;align-items:center;gap:clamp(14px,3vw,30px);
+  min-height:62px;flex-wrap:wrap;padding-block:10px}
+.mark{display:flex;align-items:center;gap:9px;color:var(--ink);font-family:var(--f-display);
+  font-weight:800;font-size:.95rem;letter-spacing:-.01em;margin-right:auto}
+.mark:hover{text-decoration:none}
+.mark svg{display:block}
+.top nav{display:flex;gap:clamp(12px,2.4vw,24px);flex-wrap:wrap;align-items:center}
+.top nav a{color:var(--ink-2);font-size:.92rem;font-weight:500}
+.top nav a[aria-current="page"]{color:var(--ink);box-shadow:inset 0 -2px var(--ink)}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--f-body);font-weight:600;font-size:.95rem;line-height:1;
+  padding:13px 20px;border-radius:3px;border:1px solid transparent;cursor:pointer;
+  background:var(--accent);color:var(--accent-ink);text-align:center;
+}
+.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn.ghost:hover{background:var(--surface-2);filter:none}
+.btn small{font-weight:400;opacity:.72;font-size:.85em}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+
+/* ---------- sections ---------- */
+section{padding-block:clamp(48px,7vw,88px)}
+.band{background:var(--surface);border-block:1px solid var(--line)}
+.hd{display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(26px,4vw,42px)}
+.hd h2{font-size:clamp(1.6rem,3.4vw,2.35rem)}
+
+/* ---------- hero ---------- */
+.hero{padding-block:clamp(52px,8vw,96px) clamp(40px,6vw,64px)}
+.hero h1{font-size:clamp(2.35rem,6.2vw,4.05rem);letter-spacing:-.032em;max-width:16ch}
+.hero .lede{margin-top:20px;font-size:clamp(1.05rem,2vw,1.28rem)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.facts li{
+  font-family:var(--f-mono);font-size:.74rem;letter-spacing:.04em;
+  border:1px solid var(--line-2);border-radius:2px;padding:6px 10px;color:var(--ink-2);
+  background:var(--surface);
+}
+
+/* ---------- the two products ---------- */
+.routes{display:grid;gap:clamp(18px,2.6vw,28px);grid-template-columns:1fr}
+@media (min-width:900px){.routes{grid-template-columns:1fr 1fr}}
+.route{
+  display:flex;flex-direction:column;
+  background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--k);
+  border-radius:4px;overflow:hidden;
+}
+.route.p{--k:var(--pro);--kt:var(--pro-text);--kw:var(--pro-wash)}
+.route.d{--k:var(--doc);--kt:var(--doc-text);--kw:var(--doc-wash)}
+.route-head{padding:clamp(22px,3vw,30px) clamp(20px,3vw,30px) 0}
+.route h3{font-size:clamp(1.55rem,3vw,1.95rem);letter-spacing:-.028em}
+.route .who{color:var(--muted);font-size:.94rem;margin-top:8px}
+.price{display:flex;align-items:baseline;gap:10px;margin-top:18px;flex-wrap:wrap}
+.price b{font-family:var(--f-display);font-size:2.1rem;font-weight:800;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.price span{color:var(--muted);font-size:.9rem}
+.route ul.does{
+  display:flex;flex-direction:column;gap:11px;
+  padding:22px clamp(20px,3vw,30px);margin-top:4px;
+}
+.route ul.does li{position:relative;padding-left:20px;font-size:.97rem;color:var(--ink-2)}
+.route ul.does li::before{
+  content:"";position:absolute;left:0;top:.62em;width:9px;height:2px;background:var(--k);
+}
+.route ul.does li b{color:var(--ink);font-weight:600}
+.route .foot{margin-top:auto;padding:0 clamp(20px,3vw,30px) clamp(22px,3vw,30px)}
+.route .btn{background:var(--k);color:#fff;border-color:var(--k)}
+.route .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.route .trial{font-size:.82rem;color:var(--muted);margin-top:12px}
+
+/* ---------- screenshot plate ---------- */
+.plate{
+  position:relative;aspect-ratio:16/10;background:var(--surface-2);
+  border-block:1px solid var(--line);overflow:hidden;
+}
+.plate img,.plate video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:var(--surface-2)}
+.plate video{object-fit:contain;background:#000}
+.plate .ph{display:none}
+.plate.missing .ph{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px;
+  background-color:var(--surface-2);
+  background-image:repeating-linear-gradient(135deg,transparent 0 9px,var(--line) 9px 10px);
+}
+.plate.missing .ph b{font-family:var(--f-mono);font-size:.74rem;font-weight:500;letter-spacing:.06em;
+  color:var(--ink-2);background:var(--surface);border:1px solid var(--line-2);
+  padding:5px 9px;border-radius:2px}
+.plate.missing .ph i{font-style:normal;font-size:.78rem;color:var(--muted);max-width:34ch}
+figure.shot{margin:0;display:flex;flex-direction:column}
+figure.shot .plate{border:1px solid var(--line);border-radius:3px 3px 0 0}
+figure.shot figcaption{
+  font-family:var(--f-mono);font-size:.73rem;letter-spacing:.03em;color:var(--muted);
+  border:1px solid var(--line);border-top:0;border-radius:0 0 3px 3px;
+  padding:9px 12px;background:var(--surface);
+}
+figure.shot figcaption b{color:var(--ink-2);font-weight:500}
+
+/* ---------- compare table ---------- */
+.scroller{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.94rem}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag-p{color:var(--pro-text);font-weight:600}
+.tag-d{color:var(--doc-text);font-weight:600}
+
+/* ---------- proof tiles ---------- */
+.tiles{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));overflow:hidden}
+.tile{background:var(--surface);padding:20px}
+.tile b{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(1.7rem,3.6vw,2.3rem);
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.tile span{display:block;margin-top:9px;font-size:.86rem;color:var(--muted)}
+
+/* ---------- keys / two-column prose ---------- */
+.cols{display:grid;gap:clamp(20px,3vw,36px);grid-template-columns:1fr}
+@media (min-width:820px){.cols{grid-template-columns:1.05fr .95fr}}
+.note{border-left:2px solid var(--line-2);padding-left:18px;display:flex;flex-direction:column;gap:12px}
+.note p{color:var(--ink-2);font-size:.97rem}
+
+/* ---------- founder ---------- */
+.founder{
+  border:1px solid var(--line-2);border-radius:4px;background:var(--surface);
+  padding:clamp(22px,3.4vw,34px);display:flex;flex-wrap:wrap;gap:22px;align-items:center;
+  justify-content:space-between;
+}
+.founder .code{
+  font-family:var(--f-mono);font-weight:600;font-size:1.15rem;letter-spacing:.08em;
+  border:1px dashed var(--line-2);border-radius:3px;padding:9px 14px;background:var(--surface-2);
+  display:inline-block;
+}
+
+/* ---------- faq ---------- */
+.faq{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{
+  cursor:pointer;list-style:none;padding:16px 0;font-weight:600;font-size:1rem;
+  display:flex;justify-content:space-between;gap:16px;align-items:baseline;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--muted);font-weight:400}
+.faq details[open] summary::after{content:"\2212"}
+.faq p{padding:0 0 18px;color:var(--ink-2);max-width:66ch;font-size:.97rem}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);background:var(--surface);padding-block:34px;font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;align-items:flex-start}
+footer nav{display:flex;flex-wrap:wrap;gap:16px}
+footer a{color:var(--ink-2)}
+footer p{color:var(--muted);max-width:42ch}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="index.html">
+      <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true" fill="currentColor">
+        <rect x="0" y="12" width="3" height="6"/><rect x="4.7" y="10" width="3" height="8"/>
+        <rect x="9.4" y="0" width="3" height="18"/><rect x="14.1" y="11" width="3" height="7"/>
+        <rect x="18.8" y="13" width="3" height="5"/>
+      </svg>
+      Overview
+    </a>
+    <nav>
+      <a href="pro.html">AI&nbsp;Gamer&nbsp;Pro</a>
+      <a href="doc.html">Doc&nbsp;AI</a>
+      <a href="case-study.html">Case study</a>
+      <a href="docs-pro.html">Manuals</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Two Windows apps, one workshop</p>
+    <h1>The video gets made while you are asleep.</h1>
+    <p class="lede">One app turns gameplay recordings into finished faceless videos.
+      The other researches, writes, narrates and cuts documentaries. Both run on your own
+      machine, on your own API keys, and both were built to run the channels they are now sold from.</p>
+    <ul class="facts">
+      <li>Windows 10 &amp; 11</li>
+      <li>14-day trial, no card</li>
+      <li>Bring your own API keys</li>
+      <li>Signed installer, silent updates</li>
+    </ul>
+  </div>
+</section>
+
+<section class="band" style="padding-top:clamp(40px,5vw,60px)">
+  <div class="wrap">
+    <div class="routes">
+
+      <article class="route p">
+        <div class="route-head">
+          <p class="eyebrow" style="color:var(--kt)">For faceless gaming channels</p>
+          <h3>AI Gamer Pro</h3>
+          <p class="who">Roblox and Minecraft story channels. You record the gameplay;
+            it does everything between the recording and the upload box.</p>
+          <p class="price"><b>$39</b><span>per month &middot; or $290 a year</span></p>
+        </div>
+        <figure class="shot" style="margin:22px clamp(20px,3vw,30px) 0">
+          <div class="plate">
+            <img src="img/pro-home.png" alt="AI Gamer Pro home screen, with the project list and the step rail down the left"
+                 onerror="this.closest('.plate').classList.add('missing');this.remove()">
+            <div class="ph"><b>img/pro-home.png</b><i>Home &mdash; your projects, and the step you left off on</i></div>
+          </div>
+          <figcaption><b>FIG. 1</b> &nbsp;AI Gamer Pro, home</figcaption>
+        </figure>
+        <ul class="does">
+          <li><b>Splits your recording</b> and writes the script in your channel's voice, with your characters.</li>
+          <li><b>Records the voiceover</b> with a different ElevenLabs voice per character, then writes an SRT of exactly when every line is spoken.</li>
+          <li><b>Draws the thumbnail</b> from your reference pictures &mdash; one picture at a time, steerable in plain English.</li>
+          <li><b>Writes the title, description, chapters and tags</b> after reading how your own past titles actually did.</li>
+          <li><b>Remembers what each channel has already used</b>, so your characters do not tell the same joke every video.</li>
+        </ul>
+        <div class="foot">
+          <div class="btns">
+            <a class="btn" href="pro.html">See what it does</a>
+            <a class="btn ghost" href="https://github.com/beskicz-ux/ai-gamer-pro/releases/latest/download/AI-Gamer-Pro-Setup-4.14.exe">Start the 14-day trial</a>
+          </div>
+          <p class="trial">No card. Your Gemini and ElevenLabs keys go in on first run.</p>
+        </div>
+      </article>
+
+      <article class="route d">
+        <div class="route-head">
+          <p class="eyebrow" style="color:var(--kt)">For documentary &amp; explainer channels</p>
+          <h3>Doc AI</h3>
+          <p class="who">The older, higher-RPM audience. You describe your niche in
+            sentences; it finds the topic, checks the facts and hands you an MP4.</p>
+          <p class="price"><b>$79</b><span>per month &middot; or $590 a year</span></p>
+        </div>
+        <figure class="shot" style="margin:22px clamp(20px,3vw,30px) 0">
+          <div class="plate">
+            <img src="img/doc-radar.png" alt="Doc AI Radar, showing topic cards scored out of 100 with outlier ratios"
+                 onerror="this.closest('.plate').classList.add('missing');this.remove()">
+            <div class="ph"><b>img/doc-radar.png</b><i>Radar &mdash; topics sorted by how far past normal they went</i></div>
+          </div>
+          <figcaption><b>FIG. 2</b> &nbsp;Doc AI, Radar</figcaption>
+        </figure>
+        <ul class="does">
+          <li><b>Finds a topic that is moving</b> in your niche, scored by outlier ratio rather than raw views.</li>
+          <li><b>Researches it in three passes</b> &mdash; the third one exists only to try to break the first two. Every claim carries a source and a confidence you can switch off.</li>
+          <li><b>Writes in one of nine shapes</b>, never the last three this channel used, at a length nudged either way on purpose.</li>
+          <li><b>Finds real footage across nine sources</b> and draws its own headline, quote and stock-chart cards.</li>
+          <li><b>Cuts it against the narration</b> and renders an MP4 plus a CapCut project, checked against eight monetization-safety rules.</li>
+        </ul>
+        <div class="foot">
+          <div class="btns">
+            <a class="btn" href="doc.html">See what it does</a>
+            <a class="btn ghost" href="https://github.com/beskicz-ux/doc-ai/releases/latest/download/Doc-AI-Setup-1.0.exe">Start the 14-day trial</a>
+          </div>
+          <p class="trial">No card. Gemini and ElevenLabs keys; the rest are free tiers.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Which one</p>
+      <h2>They are not two versions of the same thing.</h2>
+      <p class="lede">One starts from footage you recorded. The other starts from a
+        sentence about your audience. If you run both kinds of channel, run both.</p>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th scope="col"></th><th scope="col">AI Gamer Pro</th><th scope="col">Doc AI</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="k">You supply</td><td>A gameplay recording, and your characters</td><td>A paragraph about your niche, audience and tone</td></tr>
+          <tr><td class="k">It produces</td><td>Voiceover, thumbnail, timeline markers, title pack</td><td>A rendered MP4, a CapCut project, and the upload pack</td></tr>
+          <tr><td class="k">You still do</td><td>The edit in CapCut, against markers that are already on the timeline</td><td>Nothing, unless you want to &mdash; or swap a shot and re-render in seconds</td></tr>
+          <tr><td class="k">Audience</td><td>Kids and young teens, low RPM, high volume</td><td>45&ndash;65, high RPM, lower volume</td></tr>
+          <tr><td class="k">Typical API cost</td><td class="n">Well under $1 a video</td><td class="n">$2 &ndash; $5 a video</td></tr>
+          <tr><td class="k">Price</td><td class="n"><span class="tag-p">$39</span> / mo &middot; $290 / yr</td><td class="n"><span class="tag-d">$79</span> / mo &middot; $590 / yr</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Why it exists</p>
+      <h2>Built to run four channels, then sold.</h2>
+    </div>
+    <div class="cols">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div class="tiles">
+          <div class="tile"><b class="tnum">2,003,202</b><span>lifetime views across the two main gaming channels, over 96 long-form videos</span></div>
+          <div class="tile"><b class="tnum">72.3&times;</b><span>the best title's views against that channel's own median video</span></div>
+          <div class="tile"><b class="tnum">22</b><span>finished videos logged in the first 13 days of September 2026</span></div>
+        </div>
+        <p class="lede">Every number on this site comes out of the app's own daily scans of
+          those channels. They are the founder's own channels, not a customer's, and they are
+          named and shown so you can check the arithmetic.</p>
+        <div class="btns">
+          <a class="btn" href="case-study.html">Read the case study</a>
+        </div>
+      </div>
+      <div class="note">
+        <p><strong>The thing the data actually says.</strong> Across 96 videos, the top ten
+          carry 64% of all the views. Three videos beat the channel's own median by more
+          than forty times. The rest are competent and ignored.</p>
+        <p>Nothing about the editing separates them. The difference is the title and the
+          promise behind it &mdash; and that is a job a machine can be pointed at, provided
+          it is shown which of your own titles worked and which did not.</p>
+        <p>That loop is in AI Gamer Pro. It reads your channel's own best and worst past
+          titles, measured against your own median, before it writes the next one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">How the money works</p>
+      <h2>You bring your own API keys. That is the point.</h2>
+    </div>
+    <div class="cols">
+      <div class="note" style="border-color:var(--line-2)">
+        <p><strong>No markup, no credits, no top-ups.</strong> Both apps talk to Gemini and
+          ElevenLabs with keys you make yourself, in your own accounts. You pay Google and
+          ElevenLabs directly, at their prices. A ten-minute documentary costs about
+          <span class="mono">$2</span> in API fees. A gaming video costs well under a dollar.</p>
+        <p>Apps that resell you credits have to charge a margin on every second of audio you
+          make, which means the more you use the tool the worse the deal gets. Here the
+          subscription is flat and your usage is your own business.</p>
+        <p>It also means nothing you make passes through a server of ours. Your recordings,
+          your scripts and your keys stay on your machine.</p>
+      </div>
+      <div>
+        <div class="scroller">
+          <table style="min-width:0">
+            <thead><tr><th scope="col">Key</th><th scope="col">Cost</th><th scope="col">Used for</th></tr></thead>
+            <tbody>
+              <tr><td class="k">Gemini</td><td class="n">pennies</td><td>Scripts, research, titles, thumbnails</td></tr>
+              <tr><td class="k">ElevenLabs</td><td class="n">paid</td><td>The voices and the narration</td></tr>
+              <tr><td class="k">YouTube Data</td><td class="n">free</td><td>Radar, and your own view counts</td></tr>
+              <tr><td class="k">Pexels, Pixabay</td><td class="n">free</td><td>Stock footage &mdash; Doc AI</td></tr>
+              <tr><td class="k">Four archives</td><td class="n">no key</td><td>Wikimedia, Openverse, Internet Archive, NASA</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:14px;font-size:.88rem;color:var(--muted)">Both apps test every key
+          before they let you spend anything, and quote a price before each step that costs money.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="founder">
+      <div style="flex:1 1 320px;display:flex;flex-direction:column;gap:10px">
+        <p class="eyebrow">Founding 20</p>
+        <h2 style="font-size:clamp(1.4rem,2.8vw,1.9rem)">50% off your first month, for the first twenty customers.</h2>
+        <p style="color:var(--ink-2);font-size:.97rem;max-width:52ch">Same apps, same trial, same
+          support &mdash; the discount is for the people who buy before there are reviews to read.
+          Enter the code at checkout on either product.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+        <span class="code">FOUNDER50</span>
+        <div class="btns">
+          <a class="btn" href="https://github.com/beskicz-ux/ai-gamer-pro/releases/latest/download/AI-Gamer-Pro-Setup-4.14.exe">Get AI Gamer Pro <small>$39/mo</small></a>
+          <a class="btn" href="https://github.com/beskicz-ux/doc-ai/releases/latest/download/Doc-AI-Setup-1.0.exe">Get Doc AI <small>$79/mo</small></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Before you ask</p>
+      <h2>The questions everyone sends first.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Do I need a card for the trial?</summary>
+        <p>No. Download, install, put your own API keys in, and use it for fourteen days.
+          Nothing is charged and nothing is asked for until you decide to subscribe.</p>
+      </details>
+      <details>
+        <summary>What does it actually cost me to run?</summary>
+        <p>Whatever Google and ElevenLabs charge you, which for a ten-minute documentary is
+          about $2 all in. Doc AI shows the running cost of every video on its Publish step,
+          and both apps quote a price before any step that spends money.</p>
+      </details>
+      <details>
+        <summary>Mac or Linux?</summary>
+        <p>Not yet. Both are Windows 10 and 11 desktop apps, shipped as a signed installer
+          that updates itself quietly in the background &mdash; and never in the middle of a job
+          you have already paid ElevenLabs for.</p>
+      </details>
+      <details>
+        <summary>Will YouTube demonetize a channel made this way?</summary>
+        <p>YouTube's inauthentic-content policy is aimed at mass-produced, interchangeable
+          uploads and at video assembled from other people's work with nothing added. Doc AI
+          checks every finished cut against eight rules written for exactly that &mdash; shot
+          length, borrowed share, cut rate, narration coverage &mdash; and rotates its script
+          shape so a channel does not develop one recognisable rhythm. It is a real risk and
+          the app is built around it rather than quiet about it.</p>
+      </details>
+      <details>
+        <summary>Can I use my own characters and my own look?</summary>
+        <p>Yes, and you should. AI Gamer Pro takes one reference picture per character and a
+          folder of your own best thumbnails; Doc AI takes your audience and tone in your own
+          sentences and puts them into every prompt verbatim. That is the part no setting
+          can replace.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a class="mark" href="index.html" style="margin:0">
+        <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true" fill="currentColor">
+          <rect x="0" y="12" width="3" height="6"/><rect x="4.7" y="10" width="3" height="8"/>
+          <rect x="9.4" y="0" width="3" height="18"/><rect x="14.1" y="11" width="3" height="7"/>
+          <rect x="18.8" y="13" width="3" height="5"/>
+        </svg>
+        AI Gamer Pro &amp; Doc AI
+      </a>
+      <p>Two Windows apps for people who run YouTube channels. Built and supported by one
+        person in Czechia.</p>
+      <p><a href="mailto:beskicz@gmail.com">beskicz@gmail.com</a></p>
+    </div>
+    <nav>
+      <a href="pro.html">AI Gamer Pro</a>
+      <a href="doc.html">Doc AI</a>
+      <a href="docs-pro.html">Pro manual</a>
+      <a href="docs-doc.html">Doc AI manual</a>
+      <a href="case-study.html">Case study</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
