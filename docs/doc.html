@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doc AI</title>
+<meta name="description" content="Describe your niche in plain sentences. Doc AI finds a topic, researches it with a source against every claim, writes it, narrates it, cuts it against real footage and renders the MP4. Windows. $79/month.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --ground:#EFF2F3;
+  --surface:#FFFFFF;
+  --surface-2:#E4E9EB;
+  --ink:#0D1317;
+  --ink-2:#33414B;
+  --muted:#65737D;
+  --line:#D4DBDE;
+  --line-2:#B6C0C6;
+  --accent:#A3661F;
+  --accent-text:#8A5615;
+  --accent-ink:#FFFFFF;
+  --accent-wash:#F7ECDD;
+  --good:#1F6B41;
+  --bad:#A8342A;
+  --f-display:"Bricolage Grotesque","Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --maxw:1120px;
+  --pad:clamp(18px,4vw,40px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#0A0E11; --surface:#141A1F; --surface-2:#1D252B;
+    --ink:#E9EEF1; --ink-2:#B4C0C7; --muted:#84929A;
+    --line:#242E35; --line-2:#36434B;
+    --accent:#D9973F; --accent-text:#E7B370; --accent-ink:#1A1206; --accent-wash:#281C0F;
+    --good:#5BC98C; --bad:#F0796B;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0A0E11; --surface:#141A1F; --surface-2:#1D252B;
+  --ink:#E9EEF1; --ink-2:#B4C0C7; --muted:#84929A;
+  --line:#242E35; --line-2:#36434B;
+  --accent:#D9973F; --accent-text:#E7B370; --accent-ink:#1A1206; --accent-wash:#281C0F;
+  --good:#5BC98C; --bad:#F0796B;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+img,video,svg{max-width:100%}
+a{color:var(--accent-text);text-decoration:none;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent-text);outline-offset:3px;border-radius:2px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;line-height:1.06;margin:0;
+  text-wrap:balance;letter-spacing:-.018em}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+strong{font-weight:600}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:62ch}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+.top{border-bottom:1px solid var(--line);background:var(--surface)}
+.top .wrap{display:flex;align-items:center;gap:clamp(14px,3vw,30px);min-height:62px;
+  flex-wrap:wrap;padding-block:10px}
+.mark{display:flex;align-items:center;gap:9px;color:var(--ink);font-family:var(--f-display);
+  font-weight:800;font-size:.95rem;letter-spacing:-.01em;margin-right:auto}
+.mark:hover{text-decoration:none}
+.mark svg{display:block;color:var(--accent)}
+.top nav{display:flex;gap:clamp(12px,2.4vw,24px);flex-wrap:wrap;align-items:center}
+.top nav a{color:var(--ink-2);font-size:.92rem;font-weight:500}
+.top nav a[aria-current="page"]{color:var(--ink);box-shadow:inset 0 -2px var(--accent)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--f-body);font-weight:600;font-size:.95rem;line-height:1;
+  padding:13px 20px;border-radius:3px;border:1px solid var(--accent);cursor:pointer;
+  background:var(--accent);color:var(--accent-ink);text-align:center}
+.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn.ghost:hover{background:var(--surface-2);filter:none}
+.btn small{font-weight:400;opacity:.75;font-size:.85em}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+
+section{padding-block:clamp(48px,7vw,88px)}
+.band{background:var(--surface);border-block:1px solid var(--line)}
+.hd{display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(26px,4vw,44px)}
+.hd h2{font-size:clamp(1.6rem,3.6vw,2.4rem)}
+
+.hero{padding-block:clamp(46px,7vw,84px) clamp(36px,5vw,56px)}
+.hero h1{font-size:clamp(2.3rem,6vw,3.9rem);letter-spacing:-.034em;max-width:15ch}
+.hero .lede{margin-top:20px;font-size:clamp(1.05rem,2vw,1.26rem)}
+.hero .btns{margin-top:28px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.facts li{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.04em;
+  border:1px solid var(--line-2);border-radius:2px;padding:6px 10px;color:var(--ink-2);
+  background:var(--surface)}
+
+.plate{position:relative;aspect-ratio:16/10;background:var(--surface-2);overflow:hidden}
+.plate img,.plate video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  display:block;background:var(--surface-2)}
+.plate video{object-fit:contain;background:#07090B}
+.plate .ph{display:none}
+.plate.missing .ph{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px;
+  background-color:var(--surface-2);
+  background-image:repeating-linear-gradient(135deg,transparent 0 9px,var(--line) 9px 10px)}
+.plate.missing .ph b{font-family:var(--f-mono);font-size:.74rem;font-weight:500;letter-spacing:.06em;
+  color:var(--ink-2);background:var(--surface);border:1px solid var(--line-2);padding:5px 9px;border-radius:2px}
+.plate.missing .ph i{font-style:normal;font-size:.78rem;color:var(--muted);max-width:36ch}
+figure.shot{margin:0;display:flex;flex-direction:column}
+figure.shot .plate{border:1px solid var(--line);border-radius:3px 3px 0 0}
+figure.shot figcaption{font-family:var(--f-mono);font-size:.73rem;letter-spacing:.03em;color:var(--muted);
+  border:1px solid var(--line);border-top:0;border-radius:0 0 3px 3px;padding:9px 12px;background:var(--surface)}
+figure.shot figcaption b{color:var(--ink-2);font-weight:500}
+.demo .plate{aspect-ratio:16/9}
+
+.steps{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:1fr;gap:8px;padding:26px 0;border-bottom:1px solid var(--line)}
+@media (min-width:820px){
+  .step{grid-template-columns:74px 1fr 1.15fr;gap:clamp(18px,3vw,38px);align-items:start}
+}
+.step .n{font-family:var(--f-mono);font-size:.78rem;font-weight:600;letter-spacing:.1em;
+  color:var(--accent-text);padding-top:4px}
+.step h3{font-size:1.22rem;letter-spacing:-.02em}
+.step .out{display:flex;flex-direction:column;gap:9px}
+.step p{color:var(--ink-2);font-size:.97rem;max-width:58ch}
+.step .files{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.step .files code{font-family:var(--f-mono);font-size:.73rem;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:2px;padding:3px 7px;color:var(--ink-2)}
+
+.cols{display:grid;gap:clamp(22px,3.4vw,44px);grid-template-columns:1fr}
+@media (min-width:880px){.cols{grid-template-columns:1fr 1fr}}
+@media (min-width:880px){.cols.wide-left{grid-template-columns:1.12fr .88fr}}
+.stack{display:flex;flex-direction:column;gap:16px}
+.stack p{color:var(--ink-2);font-size:1rem;max-width:60ch}
+.stack h3{font-size:clamp(1.3rem,2.6vw,1.7rem)}
+
+/* claim rows, the way the Brief screen shows them */
+.claims{border:1px solid var(--line);border-radius:3px;background:var(--surface);overflow:hidden}
+.claims .bar{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);background:var(--surface-2);border-bottom:1px solid var(--line);
+  padding:9px 14px;display:flex;justify-content:space-between;gap:12px}
+.claim{padding:13px 14px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.claim:last-child{border-bottom:0}
+.claim .conf{font-family:var(--f-mono);font-size:.64rem;font-weight:600;letter-spacing:.1em;
+  border-radius:2px;padding:3px 7px;white-space:nowrap;border:1px solid currentColor}
+.claim .conf.hi{color:var(--good)}
+.claim .conf.md{color:var(--accent-text)}
+.claim .conf.lo{color:var(--bad)}
+.claim div{display:flex;flex-direction:column;gap:4px}
+.claim p{font-size:.93rem;color:var(--ink)}
+.claim cite{font-style:normal;font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+
+/* safety meters */
+.meters{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));overflow:hidden}
+.meter{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:7px}
+.meter .t{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.meter b{font-size:.95rem;font-weight:600}
+.meter .v{font-family:var(--f-mono);font-size:.8rem;font-weight:600;color:var(--accent-text);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.meter .track{height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.meter .fill{height:100%;background:var(--accent);display:block}
+.meter span.why{font-size:.85rem;color:var(--muted)}
+
+/* format chips */
+.shapes{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));overflow:hidden}
+.shape{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:5px}
+.shape b{font-size:.97rem}
+.shape i{font-style:normal;font-size:.88rem;color:var(--ink-2)}
+.shape span{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+
+.sources{display:flex;flex-wrap:wrap;gap:8px}
+.sources li{font-family:var(--f-mono);font-size:.78rem;border:1px solid var(--line-2);
+  border-radius:2px;padding:7px 11px;background:var(--surface);color:var(--ink-2)}
+.sources li.off{border-style:dashed;color:var(--muted)}
+
+.plans{display:grid;gap:18px;grid-template-columns:1fr}
+@media (min-width:760px){.plans{grid-template-columns:1fr 1fr}}
+.plan{border:1px solid var(--line);border-radius:4px;background:var(--surface);
+  padding:clamp(22px,3vw,30px);display:flex;flex-direction:column;gap:16px}
+.plan.best{box-shadow:inset 0 0 0 1px var(--accent);border-color:var(--accent)}
+.plan .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.plan h3{font-size:1.2rem}
+.badge{font-family:var(--f-mono);font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent-ink);background:var(--accent);padding:4px 8px;border-radius:2px;font-weight:600}
+.plan .amt{display:flex;align-items:baseline;gap:8px}
+.plan .amt b{font-family:var(--f-display);font-weight:800;font-size:2.6rem;letter-spacing:-.035em;
+  font-variant-numeric:tabular-nums;line-height:1}
+.plan .amt span{color:var(--muted);font-size:.92rem}
+.plan ul{display:flex;flex-direction:column;gap:9px}
+.plan ul li{position:relative;padding-left:19px;font-size:.95rem;color:var(--ink-2)}
+.plan ul li::before{content:"";position:absolute;left:0;top:.62em;width:9px;height:2px;background:var(--accent)}
+.plan .btn{width:100%}
+.plan .fine{font-size:.82rem;color:var(--muted)}
+.founder-line{margin-top:20px;border:1px dashed var(--line-2);border-radius:3px;background:var(--surface);
+  padding:18px 20px;display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;justify-content:space-between}
+.code{font-family:var(--f-mono);font-weight:600;font-size:1.05rem;letter-spacing:.08em;
+  border:1px solid var(--accent);color:var(--accent-text);border-radius:3px;padding:7px 12px;
+  background:var(--accent-wash)}
+
+.scroller{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface)}
+table.grid{border-collapse:collapse;width:100%;min-width:560px;font-size:.94rem}
+table.grid th,table.grid td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+table.grid thead th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;background:var(--surface-2)}
+table.grid tbody tr:last-child td{border-bottom:0}
+table.grid td.k{font-weight:600;white-space:nowrap;color:var(--ink)}
+table.grid td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.grid tr.total td{font-weight:600;background:var(--accent-wash)}
+
+.faq{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:600;font-size:1rem;
+  display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--muted);font-weight:400}
+.faq details[open] summary::after{content:"\2212"}
+.faq p{padding:0 0 18px;color:var(--ink-2);max-width:66ch;font-size:.97rem}
+
+footer{border-top:1px solid var(--line);background:var(--surface);padding-block:34px;font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;align-items:flex-start}
+footer nav{display:flex;flex-wrap:wrap;gap:16px}
+footer a{color:var(--ink-2)}
+footer p{color:var(--muted);max-width:42ch}
+
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="index.html">
+      <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true" fill="currentColor">
+        <rect x="0" y="12" width="3" height="6"/><rect x="4.7" y="10" width="3" height="8"/>
+        <rect x="9.4" y="0" width="3" height="18"/><rect x="14.1" y="11" width="3" height="7"/>
+        <rect x="18.8" y="13" width="3" height="5"/>
+      </svg>
+      Doc AI
+    </a>
+    <nav>
+      <a href="doc.html" aria-current="page">Product</a>
+      <a href="docs-doc.html">Manual</a>
+      <a href="pro.html">AI Gamer Pro</a>
+      <a href="case-study.html">Case study</a>
+      <a href="index.html">Both apps</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Doc AI &middot; $79 a month</p>
+    <h1>Describe your niche. Collect the documentary.</h1>
+    <p class="lede">A Windows app for documentary and explainer channels &mdash; the older,
+      higher-RPM audience where being wrong costs more than being boring. It finds a topic
+      that is moving, researches it with a source and a confidence against every claim,
+      writes it, narrates it, finds real footage, draws its own cards, cuts it against the
+      narration and renders an MP4 plus a CapCut project.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/beskicz-ux/doc-ai/releases/latest/download/Doc-AI-Setup-1.0.exe">Start the 14-day trial</a>
+      <a class="btn ghost" href="#pricing">See pricing</a>
+    </div>
+    <ul class="facts">
+      <li>No card for the trial</li>
+      <li>About $2 of API per video</li>
+      <li>Windows 10 &amp; 11</li>
+      <li>Eight monetization checks on every cut</li>
+    </ul>
+  </div>
+</section>
+
+<section class="band demo" style="padding-block:clamp(32px,4.5vw,52px)">
+  <div class="wrap">
+    <figure class="shot">
+      <div class="plate">
+        <video src="demo-doc.mp4" controls preload="none" poster="img/doc-review.png"
+               onerror="this.closest('.plate').classList.add('missing');this.remove()"></video>
+        <div class="ph"><b>demo-doc.mp4</b><i>A topic on Radar to a rendered MP4, with the eight safety checks passing</i></div>
+      </div>
+      <figcaption><b>DEMO</b> &nbsp;One documentary, Radar to render</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Set up once</p>
+      <h2>Nothing in it knows what your niche is. You tell it, in sentences.</h2>
+      <p class="lede">Two boxes on a channel matter more than every setting in the app put
+        together, because they go into every prompt exactly as you write them.</p>
+    </div>
+    <div class="cols wide-left" style="align-items:start">
+      <div class="claims">
+        <p class="bar"><span>Channel &rsaquo; Audience</span><span>goes into every prompt verbatim</span></p>
+        <div class="claim">
+          <div>
+            <p>45 to 65, US and UK, follows business news, comfortable with detail but not an
+              engineer, often watching on a TV while doing something else.</p>
+            <cite>This is the difference between a video made for 55-year-olds and one that sounds like every other AI channel.</cite>
+          </div>
+        </div>
+        <p class="bar"><span>Channel &rsaquo; Only take news from</span><span>optional, and the biggest free lift there is</span></p>
+        <div class="claim">
+          <div>
+            <p class="mono" style="font-size:.88rem">wsj.com, bloomberg.com, ft.com, reuters.com, cnbc.com</p>
+            <cite>Same number of stories, from five newsrooms with standards desks instead of aggregators rewriting press releases.</cite>
+          </div>
+        </div>
+      </div>
+      <div class="stack">
+        <p><strong>Audience</strong> and <strong>Tone</strong>, in your own sentences. Then
+          four to ten keywords for Radar to search, and a narrator you pick once and never
+          think about again.</p>
+        <p>Watch out for keywords that mean two things &mdash; "intel" returns stories about
+          intelligence agencies as well as the company. "intel earnings" is tighter.</p>
+        <p>Music is optional and never generated or downloaded for you: music is the fastest
+          way there is to collect a Content ID claim, so you drop in something you have
+          licensed or you get narration only, which is a perfectly good documentary sound.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Making one</p>
+      <h2>Seven steps. You read two of them.</h2>
+      <p class="lede">Every step that spends money quotes a price first, and the Publish step
+        tells you what that video actually cost.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="n">STEP 1</span>
+        <div>
+          <h3>Radar</h3>
+          <p>Press Scan. It asks YouTube what has been watched in your niche in the last
+            fortnight, Google News what has happened that YouTube has not caught up with, and
+            Gemini to sort the difference and rate the fit.</p>
+        </div>
+        <div class="out">
+          <p>Each card is scored out of 100 and shows what the score is made of. The number
+            that matters is the <strong>outlier ratio</strong>: a million views on a channel
+            that always gets a million tells you nothing; two hundred thousand on a channel
+            that normally gets eight thousand tells you the topic pulled. Cards also carry a
+            sweet spot &mdash; the length of the videos that actually over-performed on that
+            topic.</p>
+          <p>Scanning works with no keys at all, so you can try it before setting anything up;
+            the header says exactly which readings you are missing, so a thin list is never a
+            mystery. And if you already know what you want to make, skip Radar entirely and
+            type the topic.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 2</span>
+        <div>
+          <h3>Brief &mdash; read this one</h3>
+          <p>Three research passes: read around it, fill in the numbers and the exact quotes,
+            then a pass whose only job is to try to break the first two.</p>
+        </div>
+        <div class="out">
+          <p>Every claim arrives with a source and a confidence, and every one has a switch.
+            A claim switched off never reaches the script and stays in the file with the
+            objection written next to it. Anything marked LOW is either hedged in the
+            narration or should be switched off.</p>
+          <p>This is the only place a wrong number can be caught before it is narrated over
+            footage and uploaded.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 3</span>
+        <div>
+          <h3>Script &mdash; read this one too</h3>
+          <p>The shape is chosen for you from the nine the app knows, skipping the last three
+            this channel used, and the target length is nudged a little either way.</p>
+        </div>
+        <div class="out">
+          <p>That is deliberate. A channel where every video is twenty minutes and follows the
+            same five beats is the thing YouTube demonetizes, however good any single one of
+            them is. Reshuffle if you want a different shape; change it by hand if you know
+            better.</p>
+          <p>The script comes back in blocks, each carrying what should be on screen while it
+            is read &mdash; that is what the footage step searches with. Both are editable.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 4</span>
+        <div>
+          <h3>Voice</h3>
+          <p>Pick a narrator once; it is remembered against the channel. You get a price
+            before it spends anything.</p>
+        </div>
+        <div class="out">
+          <p>Afterwards it measures how fast that narrator actually reads and stores it, so
+            from the second video on, "20 minutes" means twenty minutes of <em>your</em>
+            narrator rather than an average one.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 5</span>
+        <div>
+          <h3>Footage</h3>
+          <p>One button. It searches every source you have switched on, ranks what comes back
+            and downloads what the cut needs.</p>
+        </div>
+        <div class="out">
+          <p>Ranking prefers clips long enough for the shot, never uses the same clip twice,
+            and spreads the work across sources. Anything switched on but unusable &mdash; a
+            provider whose key is missing &mdash; is named on the screen rather than skipped
+            quietly.</p>
+          <ul class="sources" style="margin-top:6px">
+            <li>Pexels</li><li>Pixabay</li><li>Wikimedia Commons</li><li>Openverse</li>
+            <li>Internet Archive</li><li>NASA</li><li>Your own files</li>
+            <li class="off">fal.ai b-roll &mdash; off by default</li>
+            <li class="off">Clip grabber &mdash; off by default</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 6</span>
+        <div>
+          <h3>Review</h3>
+          <p>The cut, and eight checks against it. Failing checks warn; they never block. You
+            know things the app does not.</p>
+        </div>
+        <div class="out">
+          <p>Anything you do not like, press <strong>Swap</strong> &mdash; the alternates were
+            already found, so re-rendering after a swap is seconds rather than the whole
+            video. <strong>Use my own</strong> takes a file off your disk instead, counted by
+            licence and credited in the description like everything else.</p>
+          <p>If one shot looks wrong, Preview renders that shot alone rather than making you
+            re-render twenty minutes to look at four seconds.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="n">STEP 7</span>
+        <div>
+          <h3>Publish</h3>
+          <p>Five titles, a description with chapters and credits, tags, and a thumbnail.
+            Nothing is uploaded &mdash; you copy what you want and upload it yourself.</p>
+        </div>
+        <div class="out">
+          <p>The <code class="mono">capcut</code> folder holds every clip numbered in cut
+            order plus a shot list. Drop it on a timeline, put the narration underneath, and
+            the edit is back &mdash; which is the way out if the render got something wrong.</p>
+          <div class="files"><code>final.mp4</code><code>description.txt</code><code>thumbnail.png</code><code>capcut/</code></div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cols wide-left" style="align-items:start">
+      <figure class="shot">
+        <div class="plate">
+          <img src="img/doc-brief.png" alt="The Brief screen: claims listed with a source and a confidence level, each with a switch"
+               onerror="this.closest('.plate').classList.add('missing');this.remove()">
+          <div class="ph"><b>img/doc-brief.png</b><i>Brief &mdash; every claim, its source and its confidence</i></div>
+        </div>
+        <figcaption><b>FIG. 1</b> &nbsp;The Brief step, before anything is narrated</figcaption>
+      </figure>
+      <div class="stack">
+        <p class="eyebrow">Research</p>
+        <h3>Every claim has a source and a confidence you can switch off.</h3>
+        <p>For this audience, being wrong costs more than being boring. So the research is
+          three passes, and the third one exists only to attack the first two &mdash; its
+          objections are kept in the file next to the claims they are about, even for the
+          claims you switch off.</p>
+        <div class="claims">
+          <p class="bar"><span>Brief &rsaquo; claims</span><span>switch one off and it never reaches the script</span></p>
+          <div class="claim"><span class="conf hi">HIGH</span><div><p>The figure was confirmed in the company's own quarterly filing.</p><cite>filed document &middot; named publisher &middot; dated</cite></div></div>
+          <div class="claim"><span class="conf md">MEDIUM</span><div><p>Two outlets report the number; neither names the original source.</p><cite>two newsrooms &middot; no primary</cite></div></div>
+          <div class="claim"><span class="conf lo">LOW</span><div><p>Attributed to an unnamed person familiar with the matter.</p><cite>hedge it in the narration, or switch it off</cite></div></div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted)">Illustrative rows, to show the shape of
+          the screen. Real briefs carry your topic's own claims and your own sources.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">The cards it draws</p>
+      <h2>Some shots are not searched for. They are drawn.</h2>
+      <p class="lede">Where a line is about a published headline, somebody's words, or a share
+        price moving, the script says so and the app draws the picture instead of going
+        looking for one.</p>
+    </div>
+    <div class="cols">
+      <div class="scroller">
+        <table class="grid" style="min-width:0">
+          <thead><tr><th scope="col">In the script</th><th scope="col">What you get</th></tr></thead>
+          <tbody>
+            <tr><td class="k">A headline</td><td>The headline set as a card, with the publisher and the date, and a highlighter that crosses the exact phrase the narration is making the point about</td></tr>
+            <tr><td class="k">A quote</td><td>The words, the speaker, and their job at the time</td></tr>
+            <tr><td class="k">A price</td><td>A chart of that ticker's closes over the range the script asked for, drawn in your channel's colour</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="stack">
+        <p><strong>They are exact.</strong> The headline is the headline, not a stock photo of
+          a newspaper.</p>
+        <p><strong>They are yours.</strong> Which pushes the borrowed-footage share down
+          rather than up &mdash; and that is one of the eight checks below.</p>
+        <p><strong>They are checked.</strong> A headline, a quote or a ticker that is not in
+          the brief is thrown away and that block gets ordinary footage instead, with a line
+          in the run panel saying so. A card built on something a model invented would be the
+          worst thing this app could put on a screen, so nothing reaches one that the research
+          does not already contain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Review &rsaquo; monetization safety</p>
+      <h2>Eight rules, checked against the finished cut.</h2>
+      <p class="lede">YouTube's inauthentic-content policy is aimed at video assembled from
+        other people's work with nothing added. Narrated documentary over short, transformed,
+        credited clips has always been fine. These are the numbers that keep you on the right
+        side of that line, measured on the render rather than promised in a settings screen.</p>
+    </div>
+    <div class="meters">
+      <div class="meter">
+        <div class="t"><b>Longest single shot</b><span class="v">8s</span></div>
+        <div class="track"><span class="fill" style="width:34%"></span></div>
+        <span class="why">No unbroken lift of somebody else's video.</span>
+      </div>
+      <div class="meter">
+        <div class="t"><b>Borrowed footage</b><span class="v">under 35%</span></div>
+        <div class="track"><span class="fill" style="width:35%"></span></div>
+        <span class="why">Most of the screen is stock, stills, drawn cards or yours.</span>
+      </div>
+      <div class="meter">
+        <div class="t"><b>Biggest single source</b><span class="v">under 15%</span></div>
+        <div class="track"><span class="fill" style="width:15%"></span></div>
+        <span class="why">No one clip becomes the episode.</span>
+      </div>
+      <div class="meter">
+        <div class="t"><b>Cut rate</b><span class="v">6+ a minute</span></div>
+        <div class="track"><span class="fill" style="width:72%"></span></div>
+        <span class="why">Constant reframing is transformation.</span>
+      </div>
+      <div class="meter">
+        <div class="t"><b>Narration over it</b><span class="v">90%+</span></div>
+        <div class="track"><span class="fill" style="width:90%"></span></div>
+        <span class="why">Your voice is the original work.</span>
+      </div>
+      <div class="meter">
+        <div class="t"><b>Borrowed audio</b><span class="v">never</span></div>
+        <div class="track"><span class="fill" style="width:0%"></span></div>
+        <span class="why">Every shot is encoded silent, so there is no switch for this &mdash; there is no render it could describe. Kills most Content ID claims outright.</span>
+      </div>
+      <div class="meter">
+        <div class="t"><b>Every shot moves</b><span class="v">on</span></div>
+        <div class="track"><span class="fill" style="width:100%"></span></div>
+        <span class="why">A push or a drift on every borrowed frame.</span>
+      </div>
+      <div class="meter">
+        <div class="t"><b>No repeated shots</b><span class="v">on</span></div>
+        <div class="track"><span class="fill" style="width:100%"></span></div>
+        <span class="why">The most visible tell of an automated edit.</span>
+      </div>
+    </div>
+    <p style="margin-top:16px;font-size:.9rem;color:var(--muted);max-width:74ch">Cards the app
+      drew sit outside the two rules about clips &mdash; biggest single source, and repeated
+      shots &mdash; because both are about somebody else's footage, and a long block about one
+      headline is two shots of that card with different moves on it, which is how a document
+      has always been held on screen. The meter says so rather than leaving them out quietly.</p>
+    <figure class="shot" style="margin-top:26px">
+      <div class="plate">
+        <img src="img/doc-review.png" alt="The Review screen: the cut in a player above the eight safety meters and the shot list"
+             onerror="this.closest('.plate').classList.add('missing');this.remove()">
+        <div class="ph"><b>img/doc-review.png</b><i>Review &mdash; the cut, the eight meters, and Swap on every row</i></div>
+      </div>
+      <figcaption><b>FIG. 2</b> &nbsp;Review, with the checks against the finished cut</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Nine shapes</p>
+      <h2>Your channel stops having a recognisable rhythm.</h2>
+      <p class="lede">The channel remembers its last three shapes and cannot repeat one. The
+        opening type rotates independently of the shape. The target length is jittered around
+        whatever Radar recommended. Two videos a week apart come out structurally different,
+        at different lengths, opening in different ways.</p>
+    </div>
+    <div class="shapes">
+      <div class="shape"><b>Timeline</b><i>How it happened, in order.</i><span>an event with a clear sequence</span></div>
+      <div class="shape"><b>Mystery</b><i>Something does not add up, and here is what we know.</i><span>contradictory claims, a story still moving</span></div>
+      <div class="shape"><b>What everyone gets wrong</b><i>The common belief, and what the record says.</i><span>a well-covered subject, covered wrongly</span></div>
+      <div class="shape"><b>Explainer</b><i>How the thing actually works, from the ground up.</i><span>technical subjects</span></div>
+      <div class="shape"><b>Profile</b><i>One person or one company, and how they got here.</i><span>a figure people half-know</span></div>
+      <div class="shape"><b>Versus</b><i>Two approaches, and which one the evidence favours.</i><span>rival companies, two schools of thought</span></div>
+      <div class="shape"><b>Countdown</b><i>Several cases, ordered, building to the biggest.</i><span>a pattern across several events</span></div>
+      <div class="shape"><b>Post-mortem</b><i>It failed. Here is the chain that led there.</i><span>a collapse, a cancellation</span></div>
+      <div class="shape"><b>The Reckoning</b><i>A four-act investigation: the break, the backstory, the war, and what it costs next.</i><span>a company at a turning point, where money, history and a fight are all in play</span></div>
+    </div>
+    <p style="margin-top:16px;font-size:.9rem;color:var(--muted);max-width:74ch">The beats
+      inside each shape are written as instructions to a writer, not as headings. "Spend the
+      first third establishing what everybody believed" produces a different script from
+      "Section 1: Background".</p>
+    <figure class="shot" style="margin-top:26px">
+      <div class="plate">
+        <img src="img/doc-script.png" alt="The Script screen: the script in editable blocks, each with the shot intent beside it"
+             onerror="this.closest('.plate').classList.add('missing');this.remove()">
+        <div class="ph"><b>img/doc-script.png</b><i>Script &mdash; blocks, and what should be on screen while each is read</i></div>
+      </div>
+      <figcaption><b>FIG. 3</b> &nbsp;The Script step, with the drawn-card rows marked</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Pricing</p>
+      <h2>$79 a month, and about $2 of API per video.</h2>
+      <p class="lede">You bring your own Gemini and ElevenLabs keys and pay them directly, at
+        their prices. Four of the footage sources need no key at all; two more are free tiers.
+        There are no credits to buy from us and no margin on your narration.</p>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <div class="row"><h3>Monthly</h3><span class="badge">Founding 20</span></div>
+        <div class="amt"><b>$79</b><span>per month</span></div>
+        <ul>
+          <li>Everything on this page, no tiers</li>
+          <li>Unlimited videos and channels</li>
+          <li>Silent signed updates</li>
+          <li>Cancel any month</li>
+        </ul>
+        <a class="btn" href="https://github.com/beskicz-ux/doc-ai/releases/latest/download/Doc-AI-Setup-1.0.exe">Subscribe monthly</a>
+        <p class="fine">Use <strong>FOUNDER50</strong> for 50% off the first month &mdash;
+          first 20 customers.</p>
+      </div>
+      <div class="plan best">
+        <div class="row"><h3>Yearly</h3><span class="badge">Save $358</span></div>
+        <div class="amt"><b>$590</b><span>per year &mdash; $49.17 a month</span></div>
+        <ul>
+          <li>The same thing, paid once</li>
+          <li>Works out at seven and a half months</li>
+          <li>Unlimited videos and channels</li>
+          <li>Silent signed updates</li>
+        </ul>
+        <a class="btn" href="https://github.com/beskicz-ux/doc-ai/releases/latest/download/Doc-AI-Setup-1.0.exe">Subscribe yearly</a>
+        <p class="fine">Against $948 if you paid monthly for twelve months.</p>
+      </div>
+    </div>
+
+    <div class="founder-line">
+      <div style="flex:1 1 300px">
+        <p class="eyebrow">Founding 20</p>
+        <p style="margin-top:6px;color:var(--ink-2);font-size:.96rem">50% off your first month,
+          for the first twenty customers. Same app, same trial, same support &mdash; it is for
+          the people who buy before there are reviews to read.</p>
+      </div>
+      <span class="code">FOUNDER50</span>
+    </div>
+
+    <h3 style="margin-top:clamp(30px,4vw,48px);font-size:1.2rem">What one twenty-minute video costs you in API fees</h3>
+    <div class="scroller" style="margin-top:14px">
+      <table class="grid">
+        <thead><tr><th scope="col">Line</th><th scope="col">Cost</th><th scope="col">Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="k">Research and script</td><td class="n">$0.10 &ndash; $0.40</td><td>Gemini Flash, roughly 3,000 words</td></tr>
+          <tr><td class="k">Narration</td><td class="n">about $1.90</td><td>ElevenLabs turbo_v2_5</td></tr>
+          <tr><td class="k">Narration, richer voice</td><td class="n">about $3.75</td><td>ElevenLabs v3 or multilingual_v2</td></tr>
+          <tr><td class="k">Stock, archive, stills</td><td class="n">free</td><td>Six sources, four of them needing no key</td></tr>
+          <tr><td class="k">Thumbnail</td><td class="n">about $0.04</td><td></td></tr>
+          <tr><td class="k">AI b-roll</td><td class="n">$1.50 &ndash; $4.50</td><td>Off by default, and capped per video so a render cannot run away with your money</td></tr>
+          <tr class="total"><td class="k">Typical, AI video off</td><td class="n">$2 &ndash; $5</td><td>The two levers are the ElevenLabs model and the AI-video cap</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:26px">
+      <a class="btn ghost" href="https://github.com/beskicz-ux/doc-ai/releases/latest/download/Doc-AI-Setup-1.0.exe">Or take the 14-day trial first &mdash; no card</a>
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="hd">
+      <p class="eyebrow">Questions</p>
+      <h2>Asked before buying.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Will this get my channel demonetized?</summary>
+        <p>The honest answer is that nothing can promise it will not. What the app does is
+          take the policy seriously in two places at once: the eight checks measure the
+          finished cut for the things the policy actually describes, and the rotating shapes
+          and jittered lengths stop the channel becoming the mass-produced, interchangeable
+          output the policy is aimed at. Failing checks warn rather than block, because you
+          know things the app does not.</p>
+      </details>
+      <details>
+        <summary>Does it download video from YouTube?</summary>
+        <p>Not unless you switch on the clip grabber, which ships off and does not install the
+          tool it needs. Downloading from YouTube is against its Terms of Service, and
+          conference and news clips carry Content ID claims as a rule. The grabber also does
+          not search &mdash; you paste a URL and a timecode, so the judgement about what is
+          fair to quote is made by a person.</p>
+      </details>
+      <details>
+        <summary>How much of it do I actually have to read?</summary>
+        <p>Two screens: the Brief and the Script. The Brief is where a wrong number is caught
+          before it is narrated; the Script is where you fix anything that does not sound like
+          speech. Everything else is one button and a progress bar.</p>
+      </details>
+      <details>
+        <summary>Can I change the edit afterwards?</summary>
+        <p>Yes, two ways. Swap any shot on the Review step and re-render in seconds, or take
+          the CapCut folder &mdash; every clip numbered in cut order, plus a shot list &mdash;
+          drop it on a timeline with the narration underneath, and the whole edit is back in
+          your hands.</p>
+      </details>
+      <details>
+        <summary>It sounds like an AI. Can that be fixed?</summary>
+        <p>Almost always, and almost always in the Tone box on the channel. It is worth ten
+          minutes: say what you do not want as well as what you do, in your own sentences. It
+          goes into every prompt verbatim.</p>
+      </details>
+      <details>
+        <summary>Is there a refund?</summary>
+        <p>The fourteen-day trial is the refund &mdash; the whole app, no card taken, so you
+          find out before you pay. If something breaks after you have subscribed, email
+          <a href="mailto:beskicz@gmail.com">beskicz@gmail.com</a> and it gets sorted.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a class="mark" href="index.html" style="margin:0">
+        <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true" fill="currentColor">
+          <rect x="0" y="12" width="3" height="6"/><rect x="4.7" y="10" width="3" height="8"/>
+          <rect x="9.4" y="0" width="3" height="18"/><rect x="14.1" y="11" width="3" height="7"/>
+          <rect x="18.8" y="13" width="3" height="5"/>
+        </svg>
+        Doc AI
+      </a>
+      <p>A Windows app for documentary and explainer channels. Built and supported by one
+        person in Czechia.</p>
+      <p><a href="mailto:beskicz@gmail.com">beskicz@gmail.com</a></p>
+    </div>
+    <nav>
+      <a href="index.html">Both apps</a>
+      <a href="pro.html">AI Gamer Pro</a>
+      <a href="docs-doc.html">Manual</a>
+      <a href="case-study.html">Case study</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
